@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>星座早見盤の自動取得</title>
+    <meta charset="utf-8" />
+    <script language="javascript" type="text/javascript">
+      function cmanGetOk(argPos){
+        document.getElementById("getLatitude").innerHTML = argPos.coords.latitude;
+        document.getElementById("getLongitude").innerHTML = argPos.coords.longitude;
+        var ido = argPos.coords.latitude;
+        var keido = argPos.coords.longitude;
+        var rotate_n = 135 - Math.floor(keido);
+        if(rotate_n < 0){
+          rotate_n = rotate_n * (-1);
+	}
+        else{
+	  rotate_n = 360 - rotate_n;
+	}	      
+        var output_img = document.getElementById("in_img");
+	output_img.style.transform = "rotate("+ rotate_n + "deg)";
+      }
+      function cmanGetErr(argErr){
+        var wErrMsg = "";
+        switch(argErr.code){
+          case 1 : wErrMsg = "位置情報の利用が許可されていません";break;
+          case 2 : wErrMsg = "デバイスの位置が判定できません";break;
+          case 3 : wErrMsg = "タイムアウトしました";break;
+        }
+        if(wErrMsg == ""){wErrMsg = argErr.message;}
+      }
+      
+      function cmanPosGet(){
+        if (typeof navigator.geolocation === 'undefined') {
+          return false;
+        }
+        var wOptions = {
+          "enableHighAccuracy": true,
+          "timeout": 10000,
+          "maximumAge": 0,
+        };
+        navigator.geolocation.getCurrentPosition(cmanGetOk, cmanGetErr, wOptions);
+        return true;
+      }
+      
+      function input_img(){
+	var data = document.getElementById("in_img");
+	data.onload = function() {
+	}
+        data.src = select_img();
+        var flag = cmanPosGet();
+      }
+      function select_img(){
+	var hiduke = new Date();
+	var month = hiduke.getMonth()+1;
+	var day = hiduke.getDate();
+	var hour = hiduke.getHours();
+	var minute = hiduke.getMinutes();
+	var minute_tmp = minute / 10;
+	minute = Math.floor(minute_tmp) * 10;
+	if (month < 10) {
+	  var tmpname = 'RotateImg/' + 'star' + 0 + month;
+	  if (day < 10) {
+	    tmpname = tmpname + '0' + day + '_';
+	    if (hour < 10) {
+	      tmpname = tmpname + 0 + hour;
+	      if (minute == 0) {
+		var filename = tmpname + '00' + '.png';
+	      }
+	      else {
+		var filename = tmpname + minute + '.png';
+	      }
+	    }
+	    else {
+	      tmpname = tmpname + hour;
+	      if (minute == 0) {
+                var filename = tmpname + '00' + '.png';
+              }
+              else {
+                var filename = tmpname + minute + '.png';
+              }
+	    }
+	  }
+	  else {
+	    tmpname = tmpname + day + '_';
+	    if (hour < 10) {
+              tmpname = tmpname + 0 + hour;
+              if (minute == 0) {
+                var filename = tmpname + '00' + '.png';
+              }
+              else {
+                var filename = tmpname + minute + '.png';
+              }
+            }
+            else {
+              tmpname = tmpname + hour;
+              if (minute == 0) {
+                var filename = tmpname + '00' + '.png';
+              }
+              else {
+                var filename = tmpname + minute + '.png';
+              }
+            }
+	  }
+	}
+	else {
+	  var tmpname = 'RotateImg/' + 'star' + month;
+	  if (day < 10) {
+            tmpname = tmpname + '0' + day + '_';
+            if (hour < 10) {
+              tmpname = tmpname + 0 + hour;
+              if (minute == 0) {
+                var filename = tmpname + '00' + '.png';
+              }
+              else {
+                var filename = tmpname + minute + '.png';
+              }
+            }
+            else {
+              tmpname = tmpname + hour;
+              if (minute == 0) {
+                var filename = tmpname + '00' + '.png';
+              }
+              else {
+                var filename = tmpname + minute + '.png';
+              }
+            }
+          }
+          else {
+            tmpname = tmpname + day + '_';
+            if (hour < 10) {
+              tmpname = tmpname + 0 + hour;
+              if (minute == 0) {
+                var filename = tmpname + '00' + '.png';
+              }
+              else {
+                var filename = tmpname + minute + '.png';
+              }
+            }
+            else {
+              tmpname = tmpname + hour;
+              if (minute == 0) {
+                var filename = tmpname + '00' + '.png';
+              }
+	      else {
+                var filename = tmpname + minute + '.png';
+              }
+            }
+	  }
+      }		       
+	return filename;
+      }
+    </script>
+  </head>
+
+  <body>
+    <!-- <style> -->
+    <h1>星座の早見盤を自動で出力します．</h1>
+    <p>
+      下のbuttonを押すと、現在の時刻から適切な星座の早見盤画像を出力します。
+    </p>
+      <!-- <img src="star0518_0000.png" id="in_img"> -->
+      <button type="button" class="btn" onclick="input_img()">button</button>
+    <!-- </style> -->
+    <link rel="stylesheet" href="style.css">
+    <p>(現在の緯度)</p>
+    <p id="getLatitude"></p>
+    <p>(現在の経度)</p>
+    <p id="getLongitude"></p>
+    <p>
+	<img id="in_img">
+    </p>
+
+    <a href="http://hoshifuru.jp/EveryStarryNight/planisphere/ai/">星座早見盤：Every Starry Night Planisphere ( hoshifuru.jp )</a>
+  </body>
+</html>
